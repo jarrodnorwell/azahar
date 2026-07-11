@@ -265,6 +265,8 @@ private slots:
     void OnLoadAmiibo();
     void OnRemoveAmiibo();
     void OnOpenCitraFolder();
+    void OnOpenNANDFolder();
+    void OnOpenSDMCFolder();
     void OnToggleFilterBar();
     void OnDisplayTitleBars(bool);
     void InitializeHotkeys();
@@ -406,6 +408,8 @@ private:
     bool game_shutdown_delayed = false;
     // Whether game was paused due to stopping video dumping
     bool game_paused_for_dumping = false;
+
+    int gdbport_from_arg = -1;
 
     QString gl_renderer;
     std::vector<QString> physical_devices;
