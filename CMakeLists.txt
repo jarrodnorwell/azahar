@@ -107,7 +107,7 @@ endif()
 
 # Track which options were explicitly set by the user (for libretro conflict detection)
 set(_LIBRETRO_INCOMPATIBLE_OPTIONS
-    ENABLE_SDL2 ENABLE_QT ENABLE_WEB_SERVICE ENABLE_SCRIPTING ENABLE_GDBSTUB
+    ENABLE_SDL2 ENABLE_SDL3 ENABLE_QT ENABLE_WEB_SERVICE ENABLE_SCRIPTING ENABLE_GDBSTUB
     ENABLE_OPENAL ENABLE_ROOM ENABLE_ROOM_STANDALONE ENABLE_CUBEB ENABLE_LIBUSB)
 set(_USER_SET_OPTIONS "")
 foreach(_opt IN LISTS _LIBRETRO_INCOMPATIBLE_OPTIONS)
@@ -116,9 +116,13 @@ foreach(_opt IN LISTS _LIBRETRO_INCOMPATIBLE_OPTIONS)
     endif()
 endforeach()
 
+option(FOR_CYTRUS "Build for Cytrus" OFF)
+
 option(ENABLE_SDL2 "Enable using SDL2" ON)
+option(ENABLE_SDL3 "Enable using SDL3" OFF)
 option(USE_SYSTEM_FAAD "Use the system faad2 lib (instead of the bundled one)" OFF)
 option(USE_SYSTEM_SDL2 "Use the system SDL2 lib (instead of the bundled one)" OFF)
+option(USE_SYSTEM_SDL3 "Use the system SDL3 lib (instead of the bundled one)" OFF)
 option(USE_SYSTEM_SPIRV_TOOLS "Use the system SPIRV-Tools lib (instead of the bundled one)" OFF)
 option(USE_SYSTEM_XXHASH "Use the system xxHash lib (instead of the bundled one)" OFF)
 
@@ -137,6 +141,7 @@ option(ENABLE_GDBSTUB "Enable GDB stub for emulated applications" ON)
 
 CMAKE_DEPENDENT_OPTION(ENABLE_CUBEB "Enables the cubeb audio backend" ON "NOT IOS" OFF)
 option(ENABLE_OPENAL "Enables the OpenAL audio backend" ON)
+option(ENABLE_COREAUDIO "Enables the CoreAudio audio backend" OFF)
 
 CMAKE_DEPENDENT_OPTION(ENABLE_LIBUSB "Enable libusb for GameCube Adapter support" ON "NOT IOS" OFF)
 
@@ -201,6 +206,9 @@ if (ENABLE_ROOM)
 endif()
 if (ENABLE_SDL2)
     add_definitions(-DENABLE_SDL2)
+endif()
+if (ENABLE_SDL3)
+    add_definitions(-DENABLE_SDL3)
 endif()
 
 if(ENABLE_SSE42 AND (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64|AMD64"))
@@ -578,6 +586,14 @@ if (ENABLE_SDL2 AND USE_SYSTEM_SDL2)
     target_link_libraries(SDL2 INTERFACE "${SDL2_LIBRARY}")
     target_include_directories(SDL2 INTERFACE "${SDL2_INCLUDE_DIR}")
     add_library(SDL2::SDL2 ALIAS SDL2)
+endif()
+
+if (ENABLE_SDL3 AND USE_SYSTEM_SDL3)
+    find_package(SDL3 REQUIRED)
+    add_library(SDL3 INTERFACE)
+    target_link_libraries(SDL3 INTERFACE "${SDL3_LIBRARY}")
+    target_include_directories(SDL3 INTERFACE "${SDL3_INCLUDE_DIR}")
+    add_library(SDL3::SDL3 ALIAS SDL3)
 endif()
 
 if (ENABLE_LIBUSB AND USE_SYSTEM_LIBUSB)

@@ -20,6 +20,10 @@
 #include <SDL.h>
 #endif
 
+#ifdef ENABLE_SDL3
+#include <SDL3/SDL.h>
+#endif
+
 namespace VideoCore {
 
 std::unique_ptr<RendererBase> CreateRenderer(Frontend::EmuWindow& emu_window,
@@ -33,7 +37,7 @@ std::unique_ptr<RendererBase> CreateRenderer(Frontend::EmuWindow& emu_window,
 #endif
 #ifdef ENABLE_VULKAN
     case Settings::GraphicsAPI::Vulkan:
-#if defined(ENABLE_SDL2) && !defined(__APPLE__)
+#if defined(ENABLE_SDL2) || defined(ENABLE_SDL3) && !defined(__APPLE__)
         // TODO: When we migrate to SDL3, refactor so that we don't need to init here.
         if (SDL_WasInit(SDL_INIT_VIDEO) == 0) {
             SDL_Init(SDL_INIT_VIDEO);

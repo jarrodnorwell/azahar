@@ -14,8 +14,13 @@
 #include "input_common/keyboard.h"
 #include "input_common/main.h"
 #include "input_common/motion_emu.h"
+#if ENABLE_SDL3
+#include "input_common/sdl/sdl3.h"
+#include "input_common/sdl/sdl3_impl.h"
+#else
 #include "input_common/sdl/sdl.h"
 #include "input_common/sdl/sdl_impl.h"
+#endif
 #include "input_common/touch_from_button.h"
 #include "input_common/udp/udp.h"
 
@@ -242,7 +247,7 @@ namespace Polling {
 std::vector<std::unique_ptr<DevicePoller>> GetPollers(DeviceType type) {
     std::vector<std::unique_ptr<DevicePoller>> pollers;
 
-#ifdef HAVE_SDL2
+#if defined(HAVE_SDL2) || defined(HAVE_SDL3)
     pollers = sdl->GetPollers(type);
 #endif
 #ifdef ENABLE_GCADAPTER

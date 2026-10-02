@@ -11,6 +11,9 @@
 #ifdef HAVE_SDL2
 #include "audio_core/sdl2_sink.h"
 #endif
+#ifdef HAVE_SDL3
+#include "audio_core/sdl3_sink.h"
+#endif
 #ifdef HAVE_LIBRETRO
 #include "audio_core/libretro_sink.h"
 #endif
@@ -19,6 +22,9 @@
 #endif
 #ifdef HAVE_OPENAL
 #include "audio_core/openal_sink.h"
+#endif
+#ifdef HAVE_COREAUDIO
+#include "audio_core/coreaudio_sink.h"
 #endif
 #include "common/logging/log.h"
 
@@ -53,6 +59,20 @@ constexpr std::array sink_details = {
                     return std::make_unique<SDL2Sink>(std::string(device_id));
                 },
                 &ListSDL2SinkDevices},
+#endif
+#ifdef HAVE_SDL3
+    SinkDetails{SinkType::SDL3, "SDL3",
+                [](std::string_view device_id) -> std::unique_ptr<Sink> {
+                    return std::make_unique<SDL3Sink>(std::string(device_id));
+                },
+                &ListSDL3SinkDevices},
+#endif
+#ifdef HAVE_COREAUDIO
+    SinkDetails{SinkType::CoreAudio, "CoreAudio",
+                [](std::string_view device_id) -> std::unique_ptr<Sink> {
+                    return std::make_unique<CoreAudioSink>(std::string(device_id));
+                },
+                &ListCoreAudioSinkDevices},
 #endif
     SinkDetails{SinkType::Null, "None",
                 [](std::string_view device_id) -> std::unique_ptr<Sink> {

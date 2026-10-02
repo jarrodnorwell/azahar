@@ -29,7 +29,11 @@
 #elif defined(__APPLE__)
 #include <TargetConditionals.h>
 #if TARGET_OS_IPHONE
+#if defined(FOR_CYTRUS)
+#define EMU_APPLE_DATA_DIR "Documents" DIR_SEP "Cytrus"
+#else
 #define EMU_APPLE_DATA_DIR "Documents" DIR_SEP "Azahar"
+#endif
 #define LEGACY_CITRA_APPLE_DATA_DIR "Documents" DIR_SEP "Citra"
 #define LEGACY_LIME3DS_APPLE_DATA_DIR "Documents" DIR_SEP "Lime3DS"
 #else

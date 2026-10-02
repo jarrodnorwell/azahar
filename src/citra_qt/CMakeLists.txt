@@ -294,6 +294,11 @@ if(ENABLE_SDL2)
     target_compile_definitions(citra_qt PRIVATE HAVE_SDL2)
 endif()
 
+if(ENABLE_SDL3)
+    target_link_libraries(citra_qt PRIVATE SDL3::SDL3)
+    target_compile_definitions(citra_qt PRIVATE HAVE_SDL3)
+endif()
+
 create_target_directory_groups(citra_qt)
 
 target_link_libraries(citra_qt PRIVATE audio_core citra_common citra_core input_common network video_core)

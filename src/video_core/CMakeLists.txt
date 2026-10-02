@@ -209,6 +209,10 @@ if(ENABLE_SDL2)
     target_link_libraries(video_core PRIVATE SDL2::SDL2)
 endif()
 
+if(ENABLE_SDL3)
+    target_link_libraries(video_core PRIVATE SDL3::SDL3)
+endif()
+
 add_dependencies(video_core host_shaders)
 target_include_directories(video_core PRIVATE ${HOST_SHADERS_INCLUDE})
 

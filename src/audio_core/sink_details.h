@@ -20,9 +20,11 @@ enum class SinkType : u32 {
     Cubeb = 2,
     OpenAL = 3,
     SDL2 = 4,
+    SDL3 = 5,
 #ifdef HAVE_LIBRETRO
-    LibRetro = 5,
+    LibRetro = 6,
 #endif
+    CoreAudio = 7
 };
 
 struct SinkDetails {

@@ -210,6 +210,12 @@ if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
     add_subdirectory(sdl2 EXCLUDE_FROM_ALL)
 endif()
 
+# SDL3
+if (ENABLE_SDL3 AND NOT USE_SYSTEM_SDL3)
+    add_subdirectory(sdl3 EXCLUDE_FROM_ALL)
+endif()
+
+
 # libusb
 if (ENABLE_LIBUSB AND NOT USE_SYSTEM_LIBUSB)
     add_subdirectory(libusb EXCLUDE_FROM_ALL)

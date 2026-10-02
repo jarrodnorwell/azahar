@@ -10,8 +10,6 @@ add_library(input_common STATIC EXCLUDE_FROM_ALL
     precompiled_headers.h
     touch_from_button.cpp
     touch_from_button.h
-    sdl/sdl.cpp
-    sdl/sdl.h
     udp/client.cpp
     udp/client.h
     udp/protocol.cpp
@@ -22,12 +20,28 @@ add_library(input_common STATIC EXCLUDE_FROM_ALL
 
 if(ENABLE_SDL2)
     target_sources(input_common PRIVATE
+        sdl/sdl.cpp
+        sdl/sdl.h
+
         sdl/sdl_impl.cpp
         sdl/sdl_joystick.cpp
         sdl/sdl_impl.h
     )
     target_link_libraries(input_common PRIVATE SDL2::SDL2)
     target_compile_definitions(input_common PRIVATE HAVE_SDL2)
+endif()
+
+if(ENABLE_SDL3)
+    target_sources(input_common PRIVATE
+        sdl/sdl3.cpp
+        sdl/sdl3.h
+
+        sdl/sdl3_impl.cpp
+        sdl/sdl3_joystick.cpp
+        sdl/sdl3_impl.h
+    )
+    target_link_libraries(input_common PRIVATE SDL3::SDL3)
+    target_compile_definitions(input_common PRIVATE HAVE_SDL3)
 endif()
 
 if(ENABLE_LIBUSB)

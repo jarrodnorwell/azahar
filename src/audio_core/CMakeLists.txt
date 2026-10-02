@@ -39,9 +39,11 @@ add_library(audio_core STATIC EXCLUDE_FROM_ALL
     time_stretch.h
 
     $<$<BOOL:${ENABLE_SDL2}>:sdl2_sink.cpp sdl2_sink.h>
+    $<$<BOOL:${ENABLE_SDL3}>:sdl3_sink.cpp sdl3_sink.h>
     $<$<BOOL:${ENABLE_CUBEB}>:cubeb_sink.cpp cubeb_sink.h cubeb_input.cpp cubeb_input.h>
     $<$<BOOL:${ENABLE_LIBRETRO}>:libretro_sink.cpp libretro_sink.h libretro_input.cpp libretro_input.h>
     $<$<BOOL:${ENABLE_OPENAL}>:openal_input.cpp openal_input.h openal_sink.cpp openal_sink.h>
+    $<$<BOOL:${ENABLE_COREAUDIO}>:coreaudio_input.cpp coreaudio_input.h coreaudio_sink.cpp coreaudio_sink.h>
 )
 
 create_target_directory_groups(audio_core)
@@ -59,6 +61,11 @@ if(ENABLE_SDL2)
     target_compile_definitions(audio_core PRIVATE HAVE_SDL2)
 endif()
 
+if(ENABLE_SDL3)
+    target_link_libraries(audio_core PRIVATE SDL3::SDL3)
+    target_compile_definitions(audio_core PRIVATE HAVE_SDL3)
+endif()
+
 if(ENABLE_CUBEB)
     target_link_libraries(audio_core PRIVATE cubeb)
     target_compile_definitions(audio_core PUBLIC HAVE_CUBEB)
@@ -68,6 +75,11 @@ if(ENABLE_OPENAL)
     target_link_libraries(audio_core PRIVATE OpenAL)
     target_compile_definitions(audio_core PUBLIC HAVE_OPENAL)
     add_definitions(-DAL_LIBTYPE_STATIC)
+endif()
+
+if (ENABLE_COREAUDIO)
+    target_link_libraries(audio_core PRIVATE "-framework AudioToolbox -framework AudioUnit -framework CoreAudio")
+    target_compile_definitions(audio_core PUBLIC HAVE_COREAUDIO)
 endif()
 
 if (CITRA_USE_PRECOMPILED_HEADERS)

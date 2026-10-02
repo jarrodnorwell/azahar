@@ -18,6 +18,9 @@
 #ifdef HAVE_LIBRETRO
 #include "audio_core/libretro_input.h"
 #endif
+#ifdef HAVE_COREAUDIO
+#include "audio_core/coreaudio_input.h"
+#endif
 #include "common/logging/log.h"
 #include "core/core.h"
 
@@ -60,6 +63,18 @@ constexpr std::array input_details = {
                      return std::make_unique<OpenALInput>(std::string(device_id));
                  },
                  &ListOpenALInputDevices},
+#endif
+#ifdef HAVE_COREAUDIO
+    InputDetails{InputType::CoreAudio, "CoreAudio", true,
+                 [](Core::System& system, std::string_view device_id) -> std::unique_ptr<Input> {
+                     if (!system.HasMicPermission()) {
+                         LOG_WARNING(Audio,
+                                     "Microphone permission denied, falling back to null input.");
+                         return std::make_unique<NullInput>();
+                     }
+                     return std::make_unique<CoreAudioInput>(std::string(device_id));
+                 },
+                 &ListCoreAudioInputDevices},
 #endif
     InputDetails{InputType::Static, "Static Noise", false,
                  [](Core::System& system, std::string_view device_id) -> std::unique_ptr<Input> {
